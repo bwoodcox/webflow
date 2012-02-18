@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
   s.description = "A simple action flow gem"
   s.authors = ["Bryan Woodcox"]
   s.email = 'bryan.woodcox@gmail.com'
-  s.files = ["lib/action_flow.rb"]
+  s.files = ["lib/webflow.rb"]
   s.homepage = 'http://rubygems.org/gems/actionflow'
 end

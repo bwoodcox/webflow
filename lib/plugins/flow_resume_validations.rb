@@ -21,10 +21,10 @@
 
 
 
-module ActionFlow
+module WebFlow
 
   # This class adds a couple validations before creating a new flow.
-  class FlowResumeValidations < ActionFlow::Plugin
+  class FlowResumeValidations < WebFlow::Plugin
 
     # Listen to the 'before_new_flow' internal event
     #self.listen :before_flow_resume
