@@ -29,18 +29,15 @@ module WebFlow
     # Listen to the 'before_new_flow' internal event
     self.listen :before_new_flow
 
-    
-    
-    
     # Method to override in a plugin subclass. This method will be called
     # when a controller encounters one of it's internal events
     def self::notify( internal_event_name, controller, flow_data)
           
       # Make sure there's a start_step defined
-      raise (WebFlowError.new, "Your controller must declare a start step name. Use 'start_step :step_name' and define this step in the mapping.") if controller.instance_variable_get("@_start_step").nil?
+      raise(WebFlowError.new, "Your controller must declare a start step name. Use 'start_step :step_name' and define this step in the mapping.") if controller.instance_variable_get("@_start_step").nil?
               
       # Make sure there's an end_step defined
-      raise (WebFlowError.new, "Your controller must declare an end step name. Use 'end_step :step_name' and define this step in the mapping. I suggest using a view step which could redirect if you don't want to create a 'thank you' screen.") if controller.instance_variable_get("@_end_step").nil?
+      raise(WebFlowError.new, "Your controller must declare an end step name. Use 'end_step :step_name' and define this step in the mapping. I suggest using a view step which could redirect if you don't want to create a 'thank you' screen.") if controller.instance_variable_get("@_end_step").nil?
           
     end
   

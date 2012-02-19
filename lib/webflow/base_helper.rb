@@ -21,7 +21,7 @@
 # This module adds helper methods to WebFlow controllers. See each method
 # for a complete description of their function.
 
-require "webflow/base"
+require "base"
 
 module WebFlow
   module BaseHelper

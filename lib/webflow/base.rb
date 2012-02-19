@@ -121,10 +121,10 @@ module WebFlow
   # incomplete. Don't bother using it for now, unless you want to contribute
   # of course. This class is stable and ready for plugin registration though.
   # The Plugin class is not. To activate the plugins system, go to the 
-  # #{ACTIONFLOW_ROOT}/webflow/webflow.rb file and uncomment the
+  # #{WEBFLOW_ROOT}/webflow/webflow.rb file and uncomment the
   # plugins initialisation code.
   # 
-  class Base < ApplicationController
+  class Base < ActionController::Base
 
     
     # Defines the symbols name prefix which are used to identify the next events.
@@ -603,121 +603,124 @@ module WebFlow
     end
     
 
-      # Called in a mapping to define which method should be called
-      # if the user submits an invalid flow id
-      def redirect_invalid_flow!
-              
-        unless validate_flow_existence
-              
-          unless @_no_flow_url ||= nil
-                  
-            raise(WebFlowError.new, "No flow data could be found for the given flow key. Your session doesn't exist.")
-              
-          else 
-                
-            redirect_to @_no_flow_url
-                  
-            return true
-                  
-          end
-                
+    # Called in a mapping to define which method should be called
+    # if the user submits an invalid flow id
+    def redirect_invalid_flow!
+
+      unless validate_flow_existence
+
+        unless @_no_flow_url ||= nil
+
+          raise(WebFlowError.new, "No flow data could be found for the given flow key. Your session doesn't exist.")
+
+        else
+
+          redirect_to @_no_flow_url
+
+          return true
+
         end
-              
-        false
-                
+
       end
+
+      false
+
+    end
     
 
-      # Makes the step_registry available and instantiates it,
-      # if necessary.
-      def step_registry
-        @_step_registry ||= {}
-      end
-            
-      # Makes the handlers available and instantiates it
-      # if necessary.
-      def handlers
-        @_handlers ||= {}
-      end
+    # Makes the step_registry available and instantiates it,
+    # if necessary.
+    def step_registry
+      @_step_registry ||= {}
+    end
 
-      # Makes the start_step available and instantiates it
-      # if necessary.
-      def start_step
-        @_start_step ||= nil
-      end
-            
-      # Makes the end_step available and instantiates it
-      # if necessary.
-      def end_step
-        @_end_step ||= nil
-      end
+    # Makes the handlers available and instantiates it
+    # if necessary.
+    def handlers
+      @_handlers ||= {}
+    end
 
-      # Returns the array of event names which cannot be mapped by users.
-      # These names are class level, so they are shared by all the instances
-      # of WebFlow::Base.
-      def self::reserved_events
-      
-        # Holds the reserved event names that cannot be mapped by users.
-        @@_reserved_events ||= Array.new
-        
-      end
-      
-      
-      # This method returns a basic set of internal filter handles on which the plugin
-      # system can tap into. When developing a plugin, we can call the WebFlow::Base.listen
-      # class method to get called upon the encounter of a given internal event.
-      def self::filters
-      
-      	@@_filters ||= { 'request_entry' => Array.new,
-      	                'before_new_flow' => Array.new,
-      	                'before_flow_resume' => Array.new,
-      	                'before_any_step_execution' => Array.new,
-      	                'after_any_step_execution' => Array.new,
-      	                'before_step_execution_chain' => Array.new,
-      	                'after_step_execution_chain' => Array.new,
-      	                'upon_handled_error' => Array.new,
-      	                'upon_unhandled_error' => Array.new,
-      	                'after_end_step' => Array.new
-      	              }
-      
-      end
+    # Makes the start_step available and instantiates it
+    # if necessary.
+    def start_step
+      @_start_step ||= nil
+    end
 
-      
-      # Internal method used to notify all the listeners of a given event that
-      # we just reached one of the internal events
-      def notify(internal_event_name)
-        
-        # Get the array of listeners for a given event
-        WebFlow::Base.filters.has_key?(internal_event_name.to_s) ? listeners = WebFlow::Base.filters.fetch(internal_event_name.to_s) : raise(WebFlowError.new, "Internal programming error...")
-        
-        # Iterate over the listeners
-        listeners.each do |plugin|
-        
-          # Notify each one of the event
-          plugin.send :notify, WebFlow::SystemEvent.new(internal_event_name.to_s, self, current_flow_data, request, response, session)
-        
-        end
-        
-      end
+    # Makes the end_step available and instantiates it
+    # if necessary.
+    def end_step
+      @_end_step ||= nil
+    end
+
+    # Returns the array of event names which cannot be mapped by users.
+    # These names are class level, so they are shared by all the instances
+    # of WebFlow::Base.
+    def self::reserved_events
+
+      # Holds the reserved event names that cannot be mapped by users.
+      @@_reserved_events ||= Array.new
+
+    end
+
+
+    # This method returns a basic set of internal filter handles on which the plugin
+    # system can tap into. When developing a plugin, we can call the WebFlow::Base.listen
+    # class method to get called upon the encounter of a given internal event.
+    def self::filters
+
+      @@_filters ||= { 'request_entry' => Array.new,
+                      'before_new_flow' => Array.new,
+                      'before_flow_resume' => Array.new,
+                      'before_any_step_execution' => Array.new,
+                      'after_any_step_execution' => Array.new,
+                      'before_step_execution_chain' => Array.new,
+                      'after_step_execution_chain' => Array.new,
+                      'upon_handled_error' => Array.new,
+                      'upon_unhandled_error' => Array.new,
+                      'after_end_step' => Array.new
+                    }
+
+    end
 
       
-      # Searches the parameters for the event name passed from the view.
-      # Returns nil if it can't be found.
-      def url_event_value(param_hash)
-      
-        # Iterate over the parameters received
-        param_hash.each do |key,value|
-        
-          # Return regex group 1 if we have a match
-      	  return $1 if key.to_s =~ Event_input_name_regex
-        
-        end
-        
-        # We didn't find any event name, return nil as the contract says.
-        nil
-      
+    # Internal method used to notify all the listeners of a given event that
+    # we just reached one of the internal events
+    def notify(internal_event_name)
+
+      # Get the array of listeners for a given event
+      WebFlow::Base.filters.has_key?(internal_event_name.to_s) ? listeners = WebFlow::Base.filters.fetch(internal_event_name.to_s) : raise(WebFlowError.new, "Internal programming error...")
+
+      # Iterate over the listeners
+      listeners.each do |plugin|
+
+        # Notify each one of the event
+        plugin.send :notify, WebFlow::SystemEvent.new(internal_event_name.to_s, self, current_flow_data, request, response, session)
+
+      end
+    end
+
+
+    # Searches the parameters for the event name passed from the view.
+    # Returns nil if it can't be found.
+    def url_event_value(param_hash)
+
+      # Iterate over the parameters received
+      param_hash.each do |key,value|
+
+        # Return regex group 1 if we have a match
+        return $1 if key.to_s =~ Event_input_name_regex
+
       end
 
+      # We didn't find any event name, return nil as the contract says.
+      nil
+
+    end
   end
-
 end
+#
+#if defined? ActionController
+#  ActionController::Base.class_eval do
+#    include WebFlow
+#  end
+#end
