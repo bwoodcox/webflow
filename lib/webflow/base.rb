@@ -124,9 +124,9 @@ module WebFlow
   # #{WEBFLOW_ROOT}/webflow/webflow.rb file and uncomment the
   # plugins initialisation code.
   # 
-  class Base < ActionController::Base
+  class Base < ::ApplicationController
 
-    
+
     # Defines the symbols name prefix which are used to identify the next events.
     # As an example, in a view_state, the button used to trigger the save event 
     # would be named '_event_save'. If we were in an action_state, to trigger the
@@ -718,9 +718,3 @@ module WebFlow
     end
   end
 end
-#
-#if defined? ActionController
-#  ActionController::Base.class_eval do
-#    include WebFlow
-#  end
-#end
