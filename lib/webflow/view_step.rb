@@ -162,31 +162,31 @@ module WebFlow
     #    end
     #  
     #  end
-    #def to_render(*events, &block)
-    #
-    #  # Make sure we have a block as a parameter
-    #  raise(WebFlow::WebFlowError.new, "The renders instruction takes a block as a parameter. Use the 'do' format. See API.") unless block_given?
-    #
-    #  # Iterate over the events to map
-    #  events.each do |name|
-    #
-    #    # Associate each event name with the received block
-    #    renders.store name.to_s, block
-    #
-    #  end
-    #
-    #end
-
-
-    def on_render(&block)
+    def to_render(*events, &block)
 
       # Make sure we have a block as a parameter
       raise(WebFlow::WebFlowError.new, "The renders instruction takes a block as a parameter. Use the 'do' format. See API.") unless block_given?
 
-      # Associate render event with the received block
-      renders.store "render", block
+      # Iterate over the events to map
+      events.each do |name|
+
+        # Associate each event name with the received block
+        renders.store name.to_s, block
+
+      end
 
     end
+
+
+    #def before_render(&block)
+    #  block.call
+    #  # Make sure we have a block as a parameter
+    #  #raise(WebFlow::WebFlowError.new, "The renders instruction takes a block as a parameter. Use the 'do' format. See API.") unless block_given?
+    #
+    #  # Associate render event with the received block
+    #  #renders.store "render", block
+    #
+    #end
 
     private
     
