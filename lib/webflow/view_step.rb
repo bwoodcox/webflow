@@ -137,7 +137,7 @@ module WebFlow
       if result.kind_of?(WebFlow::Event) && renders.has_key?(result.name)
       
         # Execute the render block
-        args[0].instance_eval( &renders.fetch( result.name ) )
+        result = args[0].instance_eval( &renders.fetch( result.name ) )
         
       end
         
@@ -190,12 +190,10 @@ module WebFlow
 
     private
     
-      # Returns the mapped rendering overrides hash.
-      def renders
-          
-        @_renders ||= {}
-            
-      end
+    # Returns the mapped rendering overrides hash.
+    def renders
+      @_renders ||= {}
+    end
 
   end
 

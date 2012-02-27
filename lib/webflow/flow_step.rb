@@ -278,7 +278,7 @@ module WebFlow
     end
   
   
-    # Tells if the given event name is a possibe outcome of this step
+    # Tells if the given event name is a possible outcome of this step
     def has_an_outcome_for?(event_name)
       outcomes.has_key? event_name.to_s
     end
