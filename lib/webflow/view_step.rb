@@ -137,7 +137,7 @@ module WebFlow
       if result.kind_of?(WebFlow::Event) && renders.has_key?(result.name)
       
         # Execute the render block
-        result = args[0].instance_eval( &renders.fetch( result.name ) )
+        args[0].instance_eval( &renders.fetch( result.name ) )
         
       end
         

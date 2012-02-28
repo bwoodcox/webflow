@@ -153,8 +153,8 @@ module WebFlow
     # session[:flow_data-1234abcd].fetch( params[:flow_exec_key] )
     #
     # See the SessionHandler for more details
-    @@flow_execution_key_id = 'flow_exec_key'
-    cattr_accessor :flow_execution_key_id
+    @@flow_exec_key = 'flow_exec_key'
+    cattr_accessor :flow_exec_key
 
     
     # Aliases the 'render' method to intercept it and cache it's execution results.
@@ -232,7 +232,7 @@ module WebFlow
         #notify :request_entry
     
         # Tells which was the last state
-        @flow_id = params[flow_execution_key_id]
+        @flow_id = params[flow_exec_key]
       
         # Flag used to know if we reached the end_step
         @end_step_reached = false

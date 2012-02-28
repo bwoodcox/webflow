@@ -180,10 +180,11 @@ module WebFlow
     # @returns <tt>input</tt> tag with type hidden
     #
     def flow_key_tag
-      hidden_field_tag WebFlow::Base.flow_execution_key_id, @flow_id
+      hidden_field_tag WebFlow::Base.flow_exec_key, @flow_id
     end
 
 
+    # TODO: Need to refactor this to get hidden tag to render inside form tag
     def flow_form_tag(url_for_options = {}, options = {}, &block)
       content =
           if block_given?
@@ -192,7 +193,7 @@ module WebFlow
             form_tag url_for_options, options
           end
 
-      content << hidden_field_tag(WebFlow::Base.flow_execution_key_id, @flow_id)
+      content << hidden_field_tag(WebFlow::Base.flow_exec_key, @flow_id)
 
       content
     end
@@ -272,12 +273,12 @@ module WebFlow
     def append_flow_params(options, event_name)
       case options
         when Hash
-          options[:url][WebFlow::Base.flow_execution_key_id] = @flow_id
+          options[:url][WebFlow::Base.flow_exec_key] = @flow_id
           options[:url][WebFlow::Base.event_input_name_prefix + WebFlow::Base.event_prefix + event_name.to_s] = WebFlow::Base.event_prefix + event_name.to_s
 
         when String
           options << (options.index("?").nil? ? "?" : "&")
-          options << "#{WebFlow::Base.flow_execution_key_id}=#{@flow_id}&"
+          options << "#{WebFlow::Base.flow_exec_key}=#{@flow_id}&"
           options << "#{WebFlow::Base.event_input_name_prefix + WebFlow::Base.event_prefix + event_name.to_s}=#{WebFlow::Base.event_prefix + event_name.to_s}"
       end
 
