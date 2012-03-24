@@ -219,6 +219,7 @@ module WebFlow
 
       if event = options.delete("event")
         options["name"] = WebFlow::Base.event_input_name_prefix + WebFlow::Base.event_prefix + event.to_s
+        options["id"] = options["name"]
         options["value"] = WebFlow::Base.event_prefix + event.to_s
       end
 
